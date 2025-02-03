@@ -9,9 +9,9 @@ const App = () => {
   const [error, setError] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-   // Navbar component
-   const Navbar = () => (
-    <nav className="w-full bg-transparent fixed top-0 z-50">
+  // Navbar component
+  const Navbar = () => (
+    <nav className="w-full bg-gray-700 bg-opacity-60 fixed top-0 z-50">
       <div className="container mx-auto px-4 py-3 flex justify-between items-center">
         {/* Hamburger menu button */}
         <button
@@ -23,10 +23,10 @@ const App = () => {
 
         {/* Sign In/Sign Out buttons */}
         <div className="space-x-4">
-          <button className="text-white hover:text-gray-300 transition-colors">
+          <button className="text-white hover:text-gray-300 font-bold transition-colors">
             Sign In
           </button>
-          <button className="text-white hover:text-gray-300 transition-colors">
+          <button className="text-white font-bold hover:text-lg transition-colors">
             Sign Out
           </button>
         </div>
@@ -34,23 +34,24 @@ const App = () => {
     </nav>
   );
 
-    // Sidebar component
-    const Sidebar = () => (
-      <div className={`fixed top-0 left-0 h-full w-64 bg-gray-800 text-white transform transition-transform duration-300 ease-in-out z-0
+  // Sidebar component
+  const Sidebar = () => (
+    <div
+      className={`fixed top-0 left-0 h-full w-48 md:w-64 bg-gray-800 text-white transform transition-transform duration-300 ease-in-out z-40
         ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
-      >
-        <div className="p-4 mt-10">
-        <div className='title text-white font-bold text-2xl my-3 mx-3'>Your Searches</div>
-        <div className='list mx-3'>
+    >
+      <div className="p-4 mt-10">
+        <div className="title text-white font-bold text-xl md:text-2xl my-3 mx-3">Your Searches</div>
+        <div className="list mx-3">
           {getCommands().map((cmd, index) => (
-            <li key={index} className='text-white'>
+            <li key={index} className="text-white">
               {cmd}
             </li>
           ))}
         </div>
-        </div>
       </div>
-    );
+    </div>
+  );
 
   const speak = (message, callback) => {
     const utterance = new SpeechSynthesisUtterance(message);
@@ -154,47 +155,49 @@ const App = () => {
   };
 
   return (
-
-    <div className="w-screen h-screen bg-gray-100">
+    <div className="w-full min-h-screen bg-gray-100">
       <Navbar />
       <Sidebar />
-      
+
       {/* Backdrop for sidebar */}
       {isMenuOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setIsMenuOpen(false)}
         ></div>
       )}
 
-    <div className='w-screen h-screen bg items-center justify-center flex-col flex'>
-     
-     
+      <div className="w-full bg min-h-screen flex items-center justify-center flex-col pt-20">
+        <div className="items-center justify-center flex flex-col mb-8">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-green-600 mb-4">
+            Voice Assistant
+          </h1>
+          <p className="text-yellow-500 font-semibold text-center">
+            Please give me a command
+          </p>
 
-      <div className='items-center justify-center flex flex-col mb-16'>
-        <h1 className='text-6xl font-extrabold text-green-600 mb-7'>Voice Assistant</h1>
-        <p className='text-black font-semibold'>Please give me a command</p>
+          <button
+            onClick={handleClick}
+            className="px-6 py-2 bg-black text-white rounded-lg mt-4"
+            disabled={isLoading}
+          >
+            {isLoading ? "Processing..." : isListning ? "Listening..." : "Start Listening"}
+          </button>
 
-        <button
-          onClick={handleClick}
-          className='px-6 py-2 bg-black text-white rounded-lg mt-4'
-          disabled={isLoading}
-        >
-          {isLoading ? "Processing..." : isListning ? "Listening..." : "Start Listening"}
-        </button>
+          {error && <p className="text-red-500 mt-4">{error}</p>}
 
-        {error && <p className='text-red-500 mt-4'>{error}</p>}
-
-        <div className='bg-white p-5 shadow-lg h-auto rounded-xl space-y-5 m-4 mt-8'>
-          <h2 className='text-xl'>
-            <span className='text-green-600'>Recognized Speech:</span> <br />{text}
-          </h2>
-          <h2 className='text-xl'>
-            <span className='text-orange-700'>Response:</span> <br />{response}
-          </h2>
+          <div className="bg-white p-4 sm:p-5 shadow-lg rounded-xl space-y-4 m-4 mt-8 w-full max-w-md">
+            <h2 className="text-lg sm:text-xl">
+              <span className="text-green-600">Recognized Speech:</span> <br />
+              {text}
+            </h2>
+            <h2 className="text-lg sm:text-xl">
+              <span className="text-orange-700">Response:</span> <br />
+              {response}
+            </h2>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };
